@@ -1,0 +1,255 @@
+{
+  "freecad_version": [
+    "1",
+    "1",
+    "4",
+    "20260928 (Git shallow)",
+    "Unknown",
+    "2026/09/28 13:46:34",
+    "(HEAD detached at 4fd3bf320)",
+    "4fd3bf320d9566a27e60069fc8387448aaa3a094"
+  ],
+  "checks": [
+    {
+      "name": "Chassis",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 744000.0
+    },
+    {
+      "name": "PostL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 175552.0
+    },
+    {
+      "name": "UpperL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 28224.0
+    },
+    {
+      "name": "LowerL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 24192.0
+    },
+    {
+      "name": "PostR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 175552.0
+    },
+    {
+      "name": "UpperR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 28224.0
+    },
+    {
+      "name": "LowerR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 24192.0
+    },
+    {
+      "name": "GuideL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 33979.47
+    },
+    {
+      "name": "BushingL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 18810.35
+    },
+    {
+      "name": "CarriageL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 40380.04
+    },
+    {
+      "name": "SeatBottomL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 7596.37
+    },
+    {
+      "name": "SeatTopL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 7596.37
+    },
+    {
+      "name": "SpringL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 8598.4
+    },
+    {
+      "name": "LowerStopL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 1929.19
+    },
+    {
+      "name": "UpperStopL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 1929.19
+    },
+    {
+      "name": "GuideR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 33979.47
+    },
+    {
+      "name": "BushingR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 18810.35
+    },
+    {
+      "name": "CarriageR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 40380.04
+    },
+    {
+      "name": "SeatBottomR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 7596.37
+    },
+    {
+      "name": "SeatTopR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 7596.37
+    },
+    {
+      "name": "SpringR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 8598.4
+    },
+    {
+      "name": "LowerStopR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 1929.19
+    },
+    {
+      "name": "UpperStopR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 1929.19
+    },
+    {
+      "name": "Bridge",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 43200.0
+    },
+    {
+      "name": "Bracket",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 126177.13
+    },
+    {
+      "name": "Tire",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 706858.35
+    },
+    {
+      "name": "Hub",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 14137.17
+    },
+    {
+      "name": "Shaft",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 15381.24
+    },
+    {
+      "name": "Gearbox",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 83742.29
+    },
+    {
+      "name": "Motor",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 226800.0
+    },
+    {
+      "name": "AdapterL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 8064.0
+    },
+    {
+      "name": "FastenerL98",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 251.33
+    },
+    {
+      "name": "FastenerL115",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 251.33
+    },
+    {
+      "name": "AdapterR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 8064.0
+    },
+    {
+      "name": "FastenerR98",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 251.33
+    },
+    {
+      "name": "FastenerR115",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 251.33
+    },
+    {
+      "name": "TopBoltN12645",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 314.16
+    },
+    {
+      "name": "TopBoltN12620",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 314.16
+    },
+    {
+      "name": "TopBolt12645",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 314.16
+    },
+    {
+      "name": "TopBolt12620",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 314.16
+    }
+  ],
+  "note": "仅检查各部件拓扑；未完成装配干涉和承载验证"
+}

@@ -1,0 +1,98 @@
+import FreeCAD as App
+import Part, math, os, json
+from FreeCAD import Vector
+OUT='/home/yanght/codex_pro/small_car_driver/models/round-01'
+doc=App.newDocument('DriveModule_R01')
+doc.Label='小车驱动模块 R01 — 暂定尺寸概念模型'
+params=doc.addObject('Spreadsheet::Sheet','Parameters');params.Label='00 参数表 — 全部暂定 mm'
+rows=[('WheelRadius',75),('WheelWidth',40),('GuideSpacing',200),('GuideRadius',8),('TopHeight',275),('WheelCenter',85),('FrameWidth',280)]
+for i,(name,val) in enumerate(rows,1):
+ params.set('A'+str(i),name);params.set('B'+str(i),str(val));params.setAlias('B'+str(i),name);params.set('C'+str(i),'暂定 / 非实测')
+groups={}
+for name,label in [('Fixed','01 底盘与固定框架'),('Moving','02 活动过渡件'),('Existing','03 已有架外形近似 — 不可加工'),('Drive','04 轮电机简化组件'),('Guides','05 双轴导向与限位'),('Springs','06 双弹簧'),('Hardware','07 紧固件意向')]:
+ g=doc.addObject('App::Part',name);g.Label=label;groups[name]=g
+colors={'Fixed':(.32,.53,.68),'Moving':(.36,.68,.62),'Existing':(.20,.23,.26),'Drive':(.28,.30,.32),'Guides':(.72,.75,.78),'Springs':(.92,.72,.22),'Hardware':(.62,.65,.69)}
+visible=[]
+def finish(o,group,label):
+ o.Label=label;groups[group].addObject(o);o.addProperty('App::PropertyString','DesignStatus');o.DesignStatus='R01 暂定尺寸，仅用于方案评审'
+ if App.GuiUp:o.ViewObject.ShapeColor=colors[group];o.ViewObject.LineColor=(.13,.16,.19)
+ visible.append(o);return o
+def box(name,label,g,x,y,z,l,w,h):
+ o=doc.addObject('Part::Box',name);o.Length=l;o.Width=w;o.Height=h;o.Placement.Base=Vector(x,y,z);return finish(o,g,label)
+def cyl(name,label,g,x,y,z,r,h,axis=Vector(0,0,1)):
+ o=doc.addObject('Part::Cylinder',name);o.Radius=r;o.Height=h;o.Placement=App.Placement(Vector(x,y,z),App.Rotation(Vector(0,0,1),axis));return finish(o,g,label)
+def shape(name,label,g,s):
+ o=doc.addObject('Part::Feature',name);o.Shape=s;return finish(o,g,label)
+base=box('Chassis','局部底盘安装面','Fixed',-155,-115,275,310,200,12);base.setExpression('Placement.Base.z','Parameters.TopHeight')
+if App.GuiUp:base.ViewObject.Transparency=70
+for side,x in [('L',-126),('R',126)]:
+ box('Post'+side,'固定侧柱 '+side,'Fixed',x-8,-58,64,16,52,211)
+ box('Upper'+side,'导向固定上座 '+side,'Fixed',x-34 if x>0 else x-8,-56,245,42,48,14)
+ box('Lower'+side,'导向固定下座 '+side,'Fixed',x-34 if x>0 else x-8,-56,64,42,48,12)
+for side,x in [('L',-100),('R',100)]:
+ rod=cyl('Guide'+side,'导向轴 '+side,'Guides',x,-32,76,8,169);rod.setExpression('Radius','Parameters.GuideRadius');rod.setExpression('Placement.Base.x',('-' if x<0 else '')+'Parameters.GuideSpacing / 2')
+ sleeve=Part.makeCylinder(16,32,Vector(x,-32,112)).cut(Part.makeCylinder(8.3,32,Vector(x,-32,112)))
+ shape('Bushing'+side,'活动轴套 '+side,'Moving',sleeve)
+ shape('Carriage'+side,'活动轴套座 '+side,'Moving',Part.makeBox(44,44,36,Vector(x-22,-54,110)).cut(Part.makeCylinder(16.1,38,Vector(x,-32,109))))
+ # seat rings: separate from moving bearing housing
+ for tag,z,group in [('Bottom',146,'Moving'),('Top',238,'Fixed')]:
+  ring=Part.makeCylinder(22,6,Vector(x,-32,z)).cut(Part.makeCylinder(9,6,Vector(x,-32,z)))
+  shape('Seat'+tag+side,'弹簧座 '+tag+' '+side,group,ring)
+ helix=Part.makeHelix(13,78,15)
+ profile=Part.Wire([Part.makeCircle(2.2,Vector(15,0,0),Vector(0,1,0))])
+ coil=Part.Wire(helix.Edges).makePipeShell([profile],True,True);coil.translate(Vector(x,-32,154))
+ shape('Spring'+side,'压缩弹簧 '+side+' — 刚度未选','Springs',coil)
+ for tag,z in [('LowerStop',80),('UpperStop',222)]:
+  ring=Part.makeCylinder(12,8,Vector(x,-32,z)).cut(Part.makeCylinder(8.2,8,Vector(x,-32,z)))
+  shape(tag+side,'行程限位环 '+side+' '+tag,'Guides',ring)
+bridge=box('Bridge','活动横梁 — 原架连接待确认','Moving',-100,-60,104,200,12,18)
+# Retain a recognisable central circular interface + wings + slots; dimensions are placeholders.
+b=Part.makeBox(200,16,46,Vector(-100,-46,62)).fuse(Part.makeCylinder(43,16,Vector(0,-46,85),Vector(0,1,0)))
+b=b.cut(Part.makeCylinder(29,18,Vector(0,-47,85),Vector(0,1,0)))
+for angle in range(0,360,60):
+ a=math.radians(angle);b=b.cut(Part.makeCylinder(3.3,18,Vector(35*math.cos(a),-47,85+35*math.sin(a)),Vector(0,1,0)))
+for x in [-85,85]:
+ cut=Part.makeBox(10,18,18,Vector(x-5,-47,76))
+ for z in [76,94]:cut=cut.fuse(Part.makeCylinder(5,18,Vector(x,-47,z),Vector(0,1,0)))
+ b=b.cut(cut)
+shape('Bracket','已有黑色安装架 — 特征近似，非复刻','Existing',b.removeSplitter())
+wheel=cyl('Tire','驱动轮外形','Drive',0,-20,85,75,40,Vector(0,1,0));wheel.setExpression('Radius','Parameters.WheelRadius');wheel.setExpression('Height','Parameters.WheelWidth');wheel.setExpression('Placement.Base.z','Parameters.WheelCenter')
+if App.GuiUp:wheel.ViewObject.ShapeColor=(.90,.47,.13)
+cyl('Hub','轮毂外形','Drive',0,20,85,30,5,Vector(0,1,0))
+cyl('Shaft','输出连接占位','Drive',0,-49,85,12,34,Vector(0,1,0))
+cyl('Gearbox','减速组件外形占位','Drive',0,-80,85,28,34,Vector(0,1,0))
+box('Motor','电机外形占位','Drive',-30,-143,55,60,63,60)
+for side,x in [('L',-61),('R',61)]:
+ box('Adapter'+side,'新增过渡连接耳 '+side+' — 接口待核实','Moving',x-9,-60,90,18,14,32)
+ for z in [98,115]:cyl('Fastener'+side+str(z),'连接紧固件意向 '+side,'Hardware',x,-65,z,4,5,Vector(0,1,0))
+# Fixed frame to chassis fastening intent
+for x in [-126,126]:
+ for y in [-45,-20]:cyl('TopBolt'+str(x).replace('-','N')+str(-y),'底盘紧固件意向','Hardware',x,y,287,5,4)
+doc.recompute()
+report=[]
+for o in visible:
+ if not o.Shape.isNull():report.append({'name':o.Name,'valid':o.Shape.isValid(),'solids':len(o.Shape.Solids),'volume_mm3':round(o.Shape.Volume,2)})
+json.dump({'freecad_version':App.Version(),'checks':report,'note':'仅检查各部件拓扑；未完成装配干涉和承载验证'},open(OUT+'/geometry_check.json','w'),ensure_ascii=False,indent=2)
+if App.GuiUp:
+ Gui.activeDocument().activeView().viewAxonometric();Gui.activeDocument().activeView().fitAll()
+doc.recompute();doc.saveAs(OUT+'/DriveModule_R01.FCStd')
+Part.export(visible,OUT+'/DriveModule_R01.step')
+if App.GuiUp:
+ for name,method in [('isometric','viewAxonometric'),('front','viewFront'),('right','viewRight')]:
+  getattr(Gui.activeDocument().activeView(),method)();Gui.activeDocument().activeView().fitAll();Gui.activeDocument().activeView().saveImage(OUT+'/'+name+'.png',1600,1200,'White')
+ Gui.activeDocument().activeView().viewAxonometric();Gui.activeDocument().activeView().fitAll();doc.save()
+meshes=[]
+for o in visible:
+ vertices,triangles=o.Shape.tessellate(1.2)
+ group=next(k for k,g in groups.items() if o in g.Group)
+ meshes.append({'name':o.Name,'vertices':[[v.x,v.y,v.z] for v in vertices],'triangles':triangles,'color':(.90,.47,.13) if o.Name=='Tire' else colors[group]})
+json.dump(meshes,open(OUT+'/preview_mesh.json','w'))
+path=OUT+'/DriveModule_R01.FCStd'
+App.closeDocument(doc.Name)
+check=App.openDocument(path)
+check.recompute()
+objects=[check.getObject(item['name']) for item in report]
+assert len(objects)==40 and all(not o.Shape.isNull() and o.Shape.isValid() for o in objects)
+assert not any('Invalid' in o.State for o in objects)
+print('REOPEN_CHECK_PASS: '+str(len(objects))+' valid shapes')
+print('MODEL_COMPLETE '+OUT)

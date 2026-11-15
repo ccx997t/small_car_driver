@@ -1,0 +1,22 @@
+import FreeCAD as App
+import FreeCADGui as Gui
+from pathlib import Path
+p=Path('/home/yanght/codex_pro/small_car_driver/models/round-01/DriveModule_R01.FCStd')
+doc=App.ActiveDocument
+if doc is None or doc.Name!='DriveModule_R01':
+ doc=App.openDocument(str(p))
+colors={'Fixed':(.32,.53,.68),'Moving':(.36,.68,.62),'Existing':(.20,.23,.26),'Drive':(.28,.30,.32),'Guides':(.72,.75,.78),'Springs':(.92,.72,.22),'Hardware':(.62,.65,.69)}
+for key,color in colors.items():
+ doc.getObject(key).ViewObject.Visibility=True
+ for o in doc.getObject(key).Group:
+  o.ViewObject.Visibility=True
+  o.ViewObject.ShapeColor=color
+  o.ViewObject.LineColor=(.13,.16,.19)
+  o.ViewObject.DisplayMode='Flat Lines'
+doc.getObject('Tire').ViewObject.ShapeColor=(.90,.47,.13)
+doc.getObject('Chassis').ViewObject.Transparency=70
+Gui.activateWorkbench('PartWorkbench')
+Gui.activeDocument().activeView().viewAxonometric()
+Gui.activeDocument().activeView().fitAll()
+doc.recompute()
+doc.save()
