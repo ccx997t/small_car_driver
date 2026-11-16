@@ -1,0 +1,286 @@
+{
+  "version": [
+    "1",
+    "1",
+    "4",
+    "20260928 (Git shallow)",
+    "Unknown",
+    "2026/09/28 13:46:34",
+    "(HEAD detached at 4fd3bf320)",
+    "4fd3bf320d9566a27e60069fc8387448aaa3a094"
+  ],
+  "checks": [
+    {
+      "name": "RailFront",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 84249.093
+    },
+    {
+      "name": "RailRear",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 84249.093
+    },
+    {
+      "name": "InnerRail",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 119040.0
+    },
+    {
+      "name": "MountFlangeL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 30104.248
+    },
+    {
+      "name": "TowerL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 78000.0
+    },
+    {
+      "name": "LowerSupportL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 21938.801
+    },
+    {
+      "name": "UpperSupportL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 20326.561
+    },
+    {
+      "name": "MountBoltLN53",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 650.31
+    },
+    {
+      "name": "MountHeadLN53",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 380.133
+    },
+    {
+      "name": "MountBoltLN23",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 650.31
+    },
+    {
+      "name": "MountHeadLN23",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 380.133
+    },
+    {
+      "name": "GuideL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 28550.794
+    },
+    {
+      "name": "SleeveL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 12148.162
+    },
+    {
+      "name": "EndSaddleL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 75848.079
+    },
+    {
+      "name": "MovingSeatL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 6467.754
+    },
+    {
+      "name": "FixedSeatL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 6467.754
+    },
+    {
+      "name": "SpringL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 7579.857
+    },
+    {
+      "name": "StopLowerL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 837.423
+    },
+    {
+      "name": "StopUpperL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 837.423
+    },
+    {
+      "name": "GussetL",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 5624.0
+    },
+    {
+      "name": "MountFlangeR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 30104.248
+    },
+    {
+      "name": "TowerR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 78000.0
+    },
+    {
+      "name": "LowerSupportR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 21938.801
+    },
+    {
+      "name": "UpperSupportR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 20326.561
+    },
+    {
+      "name": "MountBoltRN53",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 650.31
+    },
+    {
+      "name": "MountHeadRN53",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 380.133
+    },
+    {
+      "name": "MountBoltRN23",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 650.31
+    },
+    {
+      "name": "MountHeadRN23",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 380.133
+    },
+    {
+      "name": "GuideR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 28550.794
+    },
+    {
+      "name": "SleeveR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 12148.162
+    },
+    {
+      "name": "EndSaddleR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 75848.079
+    },
+    {
+      "name": "MovingSeatR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 6467.754
+    },
+    {
+      "name": "FixedSeatR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 6467.754
+    },
+    {
+      "name": "SpringR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 7579.857
+    },
+    {
+      "name": "StopLowerR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 837.423
+    },
+    {
+      "name": "StopUpperR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 837.423
+    },
+    {
+      "name": "GussetR",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 5624.0
+    },
+    {
+      "name": "Bracket",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 126177.126
+    },
+    {
+      "name": "Tire",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 593761.012
+    },
+    {
+      "name": "Hub",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 106192.743
+    },
+    {
+      "name": "Shaft",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 14024.07
+    },
+    {
+      "name": "Gearbox",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 83742.294
+    },
+    {
+      "name": "Motor",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 226800.0
+    },
+    {
+      "name": "CableLoop",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 3173.094
+    },
+    {
+      "name": "OuterPanel",
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 122892.0
+    }
+  ],
+  "static_overlaps": [],
+  "note": "静态相交检查；不代替全行程与承载校核"
+}
