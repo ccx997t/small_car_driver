@@ -1,0 +1,48 @@
+import json, time
+import FreeCAD as App
+import FreeCADGui as Gui
+from pathlib import Path
+root=Path('/home/yanght/codex_pro/small_car_driver/models/round-03')
+colors={'Frame':(.46,.53,.59),'Fixed':(.32,.53,.68),'Moving':(.36,.68,.62),'Existing':(.20,.23,.26),'Drive':(.28,.30,.32),'Guides':(.72,.75,.78),'Springs':(.92,.72,.22),'Hardware':(.62,.65,.69)}
+def settle():
+ for _ in range(15):
+  Gui.updateGui();time.sleep(.05)
+Gui.activateWorkbench('PartWorkbench')
+for name in ['DriveModule_R03','ChassisAssembly_R03']:
+ d=App.getDocument(name) if name in App.listDocuments() else App.openDocument(str(root/(name+'.FCStd')))
+ App.setActiveDocument(d.Name)
+ for o in d.Objects:
+  if o.TypeId=='App::Part':
+   o.ViewObject.Visibility=True
+   for child in o.Group:
+    child.ViewObject.Visibility=True
+    child.ViewObject.ShapeColor=colors.get(o.Name,(.6,.6,.6))
+    child.ViewObject.LineColor=(.17,.20,.22)
+  if hasattr(o,'PreviewColor'):
+   o.ViewObject.Visibility=True;o.ViewObject.ShapeColor=o.PreviewColor
+   o.ViewObject.LineColor=(.17,.20,.22)
+  if o.Name in ['Tire','Hub']:o.ViewObject.ShapeColor=(.90,.47,.13)
+  if o.Name.startswith(('SideShell','End')) or o.Name=='InnerFloor':o.ViewObject.Transparency=85
+ if name=='ChassisAssembly_R03':
+  for rail_name in ['RailN1','Rail1']:
+   d.getObject(rail_name).ViewObject.Visibility=False
+  for o in d.Objects:
+   if o.Name.startswith(('Caster','Fork')):o.ViewObject.Visibility=False
+ d.recompute()
+ view=Gui.activeDocument().activeView();view.viewAxonometric();settle();view.fitAll();settle()
+ d.save()
+ view.saveImage(str(root/(name+'_isometric.png')),1800,1100,'White')
+ if name=='DriveModule_R03':
+  exec(compile((root/'升降演示.FCMacro').read_text(),'升降演示.FCMacro','exec'),globals())
+  evidence=[]
+  for z in [-4,0,4]:
+   slider.setValue(z);Gui.updateGui()
+   assert all(o.Shape.isValid() for o in parts)
+   view.saveImage(str(root/('motion_%s.png'%str(z).replace('-','minus'))),1600,1000,'White')
+   evidence.append({'mm':z,'wheel_center_z':d.getObject('Tire').Shape.BoundBox.Center.z,'spring_top_z':d.getObject('SpringL').Shape.BoundBox.ZMax})
+  window.close();d.save()
+  (root/'motion_gui_check.json').write_text(json.dumps(evidence,indent=2))
+ if name=='ChassisAssembly_R03':
+  view.setCameraOrientation(App.Rotation(App.Vector(1,0,0),180).Q);settle();view.fitAll();settle();view.saveImage(str(root/'assembly_bottom.png'),1800,1100,'White')
+  view.viewAxonometric();settle();view.fitAll();settle()
+ d.save()

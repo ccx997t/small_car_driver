@@ -1,0 +1,734 @@
+{
+  "assembly_checks": [
+    {
+      "name": "LeftInnerRail",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMountFlangeL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftTowerL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftLowerSupportL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftUpperSupportL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMountBoltLN53",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMountHeadLN53",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMountBoltLN23",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMountHeadLN23",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftGuideL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftSleeveL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftEndSaddleL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMovingSeatL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftFixedSeatL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftSpringL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftStopLowerL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftStopUpperL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftGussetL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMountFlangeR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftTowerR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftLowerSupportR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftUpperSupportR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMountBoltRN53",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMountHeadRN53",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMountBoltRN23",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMountHeadRN23",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftGuideR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftSleeveR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftEndSaddleR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMovingSeatR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftFixedSeatR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftSpringR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftStopLowerR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftStopUpperR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftGussetR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftBracket",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftTire",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftHub",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftShaft",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftGearbox",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftMotor",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftClampBoltL57",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftClampHeadL57",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftClampBoltL83",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftClampHeadL83",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftClampCapL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftLowerLipL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftEndRetainerBottomL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftEndRetainerTopL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftClampBoltR57",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftClampHeadR57",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftClampBoltR83",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftClampHeadR83",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftClampCapR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftLowerLipR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftEndRetainerBottomR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "LeftEndRetainerTopR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightInnerRail",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMountFlangeL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightTowerL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightLowerSupportL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightUpperSupportL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMountBoltLN53",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMountHeadLN53",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMountBoltLN23",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMountHeadLN23",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightGuideL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightSleeveL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightEndSaddleL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMovingSeatL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightFixedSeatL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightSpringL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightStopLowerL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightStopUpperL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightGussetL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMountFlangeR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightTowerR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightLowerSupportR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightUpperSupportR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMountBoltRN53",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMountHeadRN53",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMountBoltRN23",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMountHeadRN23",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightGuideR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightSleeveR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightEndSaddleR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMovingSeatR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightFixedSeatR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightSpringR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightStopLowerR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightStopUpperR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightGussetR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightBracket",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightTire",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightHub",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightShaft",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightGearbox",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightMotor",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightClampBoltL57",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightClampHeadL57",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightClampBoltL83",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightClampHeadL83",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightClampCapL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightLowerLipL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightEndRetainerBottomL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightEndRetainerTopL",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightClampBoltR57",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightClampHeadR57",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightClampBoltR83",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightClampHeadR83",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightClampCapR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightLowerLipR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightEndRetainerBottomR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RightEndRetainerTopR",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "SharedBeamN185",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "SharedBeam155",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "InnerFloor",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "SideShellN1",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "SideShell1",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "EndN700",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "End697",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "TrackN450N1",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "TrackN4501",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "Track450N1",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "Track4501",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "CasterN600N1",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "CasterMountN600N1",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "ForkN600N1N14",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "ForkN600N111",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "CasterN6001",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "CasterMountN6001",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "ForkN6001N14",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "ForkN600111",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "Caster600N1",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "CasterMount600N1",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "Fork600N1N14",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "Fork600N111",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "Caster6001",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "CasterMount6001",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "Fork6001N14",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "Fork600111",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "RailN1",
+      "valid": true,
+      "solids": 1
+    },
+    {
+      "name": "Rail1",
+      "valid": true,
+      "solids": 1
+    }
+  ],
+  "motion_samples": [
+    {
+      "displacement_mm": -4,
+      "overlaps": []
+    },
+    {
+      "displacement_mm": 0,
+      "overlaps": []
+    },
+    {
+      "displacement_mm": 4,
+      "overlaps": []
+    }
+  ],
+  "note": "仅模块移动对固定件离散检查；弹簧变形、轨道接触、整车干涉和承载未完成"
+}

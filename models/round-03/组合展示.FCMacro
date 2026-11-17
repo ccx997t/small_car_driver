@@ -1,0 +1,40 @@
+import FreeCAD as App
+import FreeCADGui as Gui
+from PySide import QtWidgets
+from pathlib import Path
+root=Path('/home/yanght/codex_pro/small_car_driver/models/round-03')
+name='Presentation_R03'
+d=App.getDocument(name) if name in App.listDocuments() else None
+if d is None and (root/(name+'.FCStd')).exists():d=App.openDocument(str(root/(name+'.FCStd')))
+if d is None:
+ d=App.newDocument(name);d.Label='第三轮 — 局部与整车组合展示'
+ for groupname,srcname,label in [('LocalView','DriveModule_R03','01 局部驱动模块'),('VehicleView','ChassisAssembly_R03','02 整车组合')]:
+  was_open=srcname in App.listDocuments()
+  src=App.getDocument(srcname) if was_open else App.openDocument(str(root/(srcname+'.FCStd')))
+  group=d.addObject('App::Part',groupname);group.Label=label
+  for o in src.Objects:
+   if o.TypeId not in ['Part::Feature','Part::Box','Part::Cylinder'] or o.Shape.isNull():continue
+   if o.Name.startswith(('X_Axis','Y_Axis','Z_Axis','XY_Plane','XZ_Plane','YZ_Plane')):continue
+   obj=d.addObject('Part::Feature',groupname+'_'+o.Name);obj.Label=o.Label;obj.Shape=o.Shape.copy();group.addObject(obj)
+   obj.addProperty('App::PropertyString','SourceDocument');obj.SourceDocument=srcname+' / '+o.Name
+   obj.ViewObject.ShapeColor=getattr(o.ViewObject,'ShapeColor',(.6,.6,.6));obj.ViewObject.LineColor=(.17,.20,.22)
+   obj.ViewObject.Transparency=o.ViewObject.Transparency
+   obj.ViewObject.Visibility=not(groupname=='VehicleView' and (o.Name in ['RailN1','Rail1'] or o.Name.startswith(('Caster','Fork'))))
+  if not was_open:App.closeDocument(src.Name)
+ d.recompute()
+ d.LocalView.ViewObject.Visibility=True;d.VehicleView.ViewObject.Visibility=False
+ App.setActiveDocument(d.Name)
+ Gui.activeDocument().activeView().viewAxonometric();Gui.activeDocument().activeView().fitAll()
+ d.saveAs(str(root/(name+'.FCStd')))
+App.setActiveDocument(d.Name);Gui.activateWorkbench('PartWorkbench')
+def switch(local):
+ d.LocalView.ViewObject.Visibility=local;d.VehicleView.ViewObject.Visibility=not local
+ App.setActiveDocument(d.Name);d.recompute()
+ Gui.activeDocument().activeView().viewAxonometric();Gui.activeDocument().activeView().fitAll()
+window=QtWidgets.QDialog(Gui.getMainWindow());window.setWindowTitle('第三轮模型展示切换')
+layout=QtWidgets.QVBoxLayout(window)
+for label,local in [('查看局部驱动',True),('查看整车组合',False)]:
+ button=QtWidgets.QPushButton(label);button.clicked.connect(lambda checked=False,local=local:switch(local));layout.addWidget(button)
+layout.addWidget(QtWidgets.QLabel('同一文件内切换；轨道与绿色万向轮保持隐藏。'))
+window.setMinimumWidth(300);window.show();Gui._car_r03_presentation=(window,switch)
+switch(True)

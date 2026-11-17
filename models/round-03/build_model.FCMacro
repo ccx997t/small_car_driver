@@ -1,0 +1,223 @@
+import FreeCAD as App
+import Part, math, os, json
+from FreeCAD import Vector
+OUT='/home/yanght/codex_pro/small_car_driver/models/round-03'
+doc=App.newDocument('DriveModule_R03')
+doc.Label='小车驱动模块 R03 — 暂定尺寸概念模型'
+params=doc.addObject('Spreadsheet::Sheet','Parameters');params.Label='00 参数表 — 全部暂定 mm'
+rows=[('OuterWheelRadius',124),('OuterWheelWidth',54),('GuideSpacing',230),('GuideRadius',8),('ShellHeightProvisional',300),('WheelCenterAboveRail',70),('BodyWidth',750)]
+for i,(name,val) in enumerate(rows,1):
+ params.set('A'+str(i),name);params.set('B'+str(i),str(val));params.setAlias('B'+str(i),name);params.set('C'+str(i),'暂定 / 非实测')
+groups={}
+for name,label in [('Frame','01 局部车架与方向'),('Fixed','02 可拆卸安装支座'),('Moving','02 活动过渡件'),('Existing','03 已有架外形近似 — 不可加工'),('Drive','04 轮电机简化组件'),('Guides','05 双轴导向与限位'),('Springs','06 双弹簧'),('Hardware','07 紧固件意向')]:
+ g=doc.addObject('App::Part',name);g.Label=label;groups[name]=g
+colors={'Frame':(.46,.53,.59),'Fixed':(.32,.53,.68),'Moving':(.36,.68,.62),'Existing':(.20,.23,.26),'Drive':(.28,.30,.32),'Guides':(.72,.75,.78),'Springs':(.92,.72,.22),'Hardware':(.62,.65,.69)}
+visible=[]
+def finish(o,group,label):
+ o.Label=label;groups[group].addObject(o);o.addProperty('App::PropertyString','DesignStatus');o.DesignStatus='R03：轮尺寸按图02，支架接口暂定，仅用于方案评审'
+ if App.GuiUp:o.ViewObject.ShapeColor=colors[group];o.ViewObject.LineColor=(.13,.16,.19)
+ visible.append(o);return o
+def box(name,label,g,x,y,z,l,w,h):
+ o=doc.addObject('Part::Box',name);o.Length=l;o.Width=w;o.Height=h;o.Placement.Base=Vector(x,y,z);return finish(o,g,label)
+def cyl(name,label,g,x,y,z,r,h,axis=Vector(0,0,1)):
+ o=doc.addObject('Part::Cylinder',name);o.Radius=r;o.Height=h;o.Placement=App.Placement(Vector(x,y,z),App.Rotation(Vector(0,0,1),axis));return finish(o,g,label)
+def shape(name,label,g,s):
+ o=doc.addObject('Part::Feature',name);o.Shape=s;return finish(o,g,label)
+# Coordinate convention: X vehicle longitudinal, +Y outside, -Y inside, +Z up.
+doc.addObject('App::FeaturePython','Orientation').addProperty('App::PropertyString','Axes')
+doc.Orientation.Axes='X 行驶方向；+Y 车外；-Y 车内/电机侧；+Z 向上。均为方案约定'
+def ring(x,y,z,ro,ri,h):return Part.makeCylinder(ro,h,Vector(x,y,z)).cut(Part.makeCylinder(ri,h,Vector(x,y,z)))
+def bolts_plate(s,points,z,h,r=3.5):
+ for x,y in points:s=s.cut(Part.makeCylinder(r,h+2,Vector(x,y,z-1)))
+ return s
+# Local hollow frame members, shown instead of an unsupported full roof plate.
+for side,x in [('Front',-185),('Rear',155)]:
+ outer=Part.makeBox(30,220,40,Vector(x,-160,190));inner=Part.makeBox(24,222,34,Vector(x+3,-161,193))
+ rail=outer.cut(inner)
+ for yy in [-53,-23]:rail=rail.cut(Part.makeCylinder(3.5,12,Vector(x+15,yy,189)))
+ shape('Rail'+side,'局部车架横梁 '+side+' — 包络暂定','Frame',rail)
+outer=Part.makeBox(310,30,40,Vector(-155,-160,190));inner=Part.makeBox(312,24,34,Vector(-156,-157,193))
+shape('InnerRail','车内侧局部纵梁 — 包络暂定','Frame',outer.cut(inner))
+for side,sign in [('L',-1),('R',1)]:
+ x=sign*115; postx=sign*145
+ # Bolted mounting flange, side web and upper/lower guide supports.
+ points=[(sign*170,-53),(sign*170,-23)]
+ plate=Part.makeBox(60,64,8,Vector(-185 if sign<0 else 125,-70,182))
+ shape('MountFlange'+side,'可拆卸车架安装法兰 '+side,'Fixed',bolts_plate(plate,points,182,8))
+ box('Tower'+side,'支座立板 '+side,'Fixed',postx-5,-62,52,10,60,130)
+ for name,z,h in [('Lower',40,10),('Upper',170,12)]:
+  block=Part.makeBox(48,50,h,Vector(-150 if sign<0 else 102,-57,z))
+  block=block.cut(Part.makeCylinder(8.1,h+2,Vector(x,-32,z-1)))
+  block=block.cut(Part.makeBox(10,60,130,Vector(postx-5,-62,52)))
+  shape(name+'Support'+side,'导向轴端支座 '+name+' '+side,'Fixed',block)
+ for xx,yy in points:
+  cyl('MountBolt'+side+str(yy).replace('-','N'),'车架安装螺栓示意 '+side,'Hardware',xx,yy,177,3,23)
+  cyl('MountHead'+side+str(yy).replace('-','N'),'螺栓头 '+side,'Hardware',xx,yy,173,5.5,4)
+ # Fixed shaft, replaceable hollow bearing and temporary end saddle.
+ cyl('Guide'+side,'固定导向轴 '+side,'Guides',x,-32,40,8,142)
+ shape('Sleeve'+side,'活动轴套 '+side+(' — 横向浮动选型待定' if side=='R' else ' — 定位侧'),'Moving',ring(x,-32,64,13,8.2,38))
+ saddle=Part.makeBox(49,48,46,Vector(-139 if sign<0 else 90,-56,62))
+ saddle=saddle.cut(Part.makeCylinder(13.1,48,Vector(x,-32,61)))
+ # Recess wraps the untouched existing arm end. Interface status remains provisional.
+ saddle=saddle.cut(Part.makeBox(20,16.4,46,Vector(-100 if sign<0 else 80,-46.2,62)))
+ shape('EndSaddle'+side,'端部适配座 '+side+' — 不改原架/夹持方案待确认','Moving',saddle)
+ # Spring is seated between rings, with explicit end coils.
+ shape('MovingSeat'+side,'活动弹簧座 '+side,'Moving',ring(x,-32,108,22,8.5,5))
+ shape('FixedSeat'+side,'固定弹簧座 '+side,'Fixed',ring(x,-32,165,22,8.5,5))
+ helix=Part.makeHelix(8,48,16);profile=Part.Wire([Part.makeCircle(2,Vector(16,0,0),Vector(0,1,0))])
+ coil=Part.Wire(helix.Edges).makePipeShell([profile],True,True);coil.translate(Vector(x,-32,115))
+ shape('Spring'+side,'弹簧 '+side+' — 预压/刚度未选','Springs',coil)
+ for tag,z in [('Lower',50),('Upper',145)]:
+  shape('Stop'+tag+side,'独立限位环 '+tag+' '+side,'Guides',ring(x,-32,z,11.5,8.1,4))
+ # Strengthening gusset, away from moving parts.
+ points3=[Vector(postx-4,-62,145),Vector(postx-4,-100,182),Vector(postx-4,-62,182)]
+ tri=Part.Face(Part.makePolygon(points3+[points3[0]])).extrude(Vector(8,0,0))
+ shape('Gusset'+side,'安装支座加强肋 '+side,'Fixed',tri)
+# The existing bracket geometry is deliberately identical to R01.
+b=Part.makeBox(200,16,46,Vector(-100,-46,62)).fuse(Part.makeCylinder(43,16,Vector(0,-46,85),Vector(0,1,0)))
+b=b.cut(Part.makeCylinder(29,18,Vector(0,-47,85),Vector(0,1,0)))
+for angle in range(0,360,60):
+ a=math.radians(angle);b=b.cut(Part.makeCylinder(3.3,18,Vector(35*math.cos(a),-47,85+35*math.sin(a)),Vector(0,1,0)))
+for x in [-85,85]:
+ cut=Part.makeBox(10,18,18,Vector(x-5,-47,76))
+ for z in [76,94]:cut=cut.fuse(Part.makeCylinder(5,18,Vector(x,-47,z),Vector(0,1,0)))
+ b=b.cut(cut)
+shape('Bracket','黑色原架 — 沿用R01近似形体，未改孔','Existing',b.removeSplitter())
+shape('Tire','驱动轮外圈 — 车外侧','Drive',Part.makeCylinder(75,40,Vector(0,-20,85),Vector(0,1,0)).cut(Part.makeCylinder(30,40,Vector(0,-20,85),Vector(0,1,0))))
+shape('Hub','轮毂简化形体','Drive',Part.makeCylinder(30,45,Vector(0,-20,85),Vector(0,1,0)).cut(Part.makeCylinder(12.2,45,Vector(0,-20,85),Vector(0,1,0))))
+cyl('Shaft','输出轴占位','Drive',0,-46,85,12,31,Vector(0,1,0))
+cyl('Gearbox','减速组件占位','Drive',0,-80,85,28,34,Vector(0,1,0))
+box('Motor','电机 — 车内侧','Drive',-30,-143,55,60,63,60)
+# Curved cable loop is a spatial reserve, not a selected cable assembly.
+edge=Part.Arc(Vector(33,-120,100),Vector(70,-115,160),Vector(70,-140,185)).toShape()
+wire=Part.Wire([edge]);prof=Part.Wire([Part.makeCircle(3,Vector(33,-120,100),edge.tangentAt(edge.FirstParameter))])
+shape('CableLoop','线缆活动余量 — 曲线占位','Hardware',wire.makePipeShell([prof],True,False))
+# Show an outside panel with wheel clearance, not a load-bearing mounting part.
+panel=Part.makeBox(380,3,160,Vector(-190,65,60)).cut(Part.makeBox(174,5,115,Vector(-87,64,59)))
+# outer panel replaced by whole-chassis context
+params.set('C1','图02初稿');params.set('C2','图02初稿');params.set('C6','图01+图02推导');params.set('C7','图01初稿')
+params.set('A9','BracketInterface');params.set('B9','待确认：端部夹持适配，不改原架');params.set('A10','SuspensionTravel');params.set('B10','工作行程未定；当前下限间隙8 mm，待弹簧及限位校核')
+
+# Module datum: rail top Z=0; axle Z=70. Local Y=0 at rail contact line.
+for o in visible:
+ o.Placement.Base.z-=15
+ if o.TypeId=='Part::Feature':o.Shape=Part.makeCompound([o.Shape.copy()])
+# Replace old generic wheels with drawing02 dimensions.
+axis=Vector(0,1,0)
+def revolved_profile(points,arc_at=None):
+ edges=[]
+ for i in range(len(points)-1):
+  if arc_at and i==arc_at[0]:edges.append(Part.Arc(Vector(*points[i]),Vector(*arc_at[1]),Vector(*points[i+1])).toShape())
+  else:edges.append(Part.makeLine(Vector(*points[i]),Vector(*points[i+1])))
+ return Part.Face(Part.Wire(edges)).revolve(Vector(0,0,points[0][2]),axis,360)
+doc.getObject('Tire').Shape=revolved_profile([(70,5,70),(95,30,70),(124,30,70),(124,84,70),(70,84,70),(70,5,70)],(0,(95-25/math.sqrt(2),5+25/math.sqrt(2),70)))
+doc.getObject('Hub').Shape=Part.makeCylinder(70,109,Vector(0,-25,70),axis).cut(Part.makeCylinder(12.2,109,Vector(0,-25,70),axis))
+# Preserve BRep of black arm; add removable pressure shoes on ends, no new holes.
+for side,sign in [('L',-1),('R',1)]:
+ x=sign*115
+ cap=Part.makeBox(59,8,46,Vector(-139 if sign<0 else 80,-64,47))
+ finger=Part.makeBox(20,10,46,Vector(-100 if sign<0 else 80,-56,47))
+ cap=cap.fuse(finger)
+ saddle=doc.getObject('EndSaddle'+side)
+ # Shape coordinates of original saddles precede the module datum shift.
+ pocket=cap.copy();saddle.Shape=saddle.Shape.cut(pocket)
+ for z in [57,83]:
+  xx=sign*132
+  bore=Part.makeCylinder(3.4,30,Vector(xx,-65,z),Vector(0,1,0))
+  cap=cap.cut(bore)
+  hole=bore.copy();saddle.Shape=saddle.Shape.cut(hole)
+  cyl('ClampBolt'+side+str(z),'端部压紧螺栓 '+side,'Moving',xx,-68,z,3,28,Vector(0,1,0))
+  cyl('ClampHead'+side+str(z),'压紧螺栓头 '+side,'Moving',xx,-72,z,5.5,4,Vector(0,1,0))
+ shape('ClampCap'+side,'可拆端部压板 '+side+' — 接触与预紧待验证','Moving',cap)
+ lip=Part.makeBox(59,40,4,Vector(-139 if sign<0 else 80,-56,43))
+ lip=lip.cut(Part.makeCylinder(8.5,6,Vector(x,-32,42)))
+ shape('LowerLip'+side,'端部下承托与防脱唇 '+side,'Moving',lip)
+ # Shaft-end retention collars, outside the sampled moving envelope.
+ for tag,z in [('Bottom',21),('Top',146)]:
+  shape('EndRetainer'+tag+side,'导向轴端保持环 '+tag+' '+side,'Guides',ring(x,-32,z,12,8.1,4))
+# Common displacement group lists, including springs whose height must change.
+moving=[o.Name for o in visible if o in groups['Moving'].Group or o in groups['Existing'].Group or o in groups['Drive'].Group]
+params.set('A12','ActualDriveOuterDiameter');params.set('B12','248');params.set('C12','图02初稿')
+params.set('A13','ActualDriveInnerDiameter');params.set('B13','140');params.set('C13','图02初稿')
+params.set('A14','DemoDisplacement');params.set('B14','-4 / 0 / +4 mm；非额定行程')
+# Separate module saved before full chassis is instantiated.
+doc.recompute();doc.saveAs(OUT+'/DriveModule_R03.FCStd')
+module_names=[o.Name for o in visible]
+# Remove R02 local rail envelope from context visibility but retain module baseline geometry.
+context=App.newDocument('ChassisAssembly_R03');context.Label='R03 整车组合 — 上轨姿态/初稿尺寸'
+allparts=[]
+def item(name,label,s,color,category):
+ o=context.addObject('Part::Feature',name);o.Label=label;o.Shape=s;o.addProperty('App::PropertyString','Source');o.Source=category
+ o.addProperty('App::PropertyColor','PreviewColor');o.PreviewColor=color
+ allparts.append(o);return o
+# Two modules with proper handedness: outer direction reverses on vehicle right.
+for side,sign in [('Left',1),('Right',-1)]:
+ for o in visible:
+  if o.Name in ['CableLoop','RailFront','RailRear']:continue
+  s=o.Shape.copy()
+  if sign<0:s=s.mirror(Vector(0,0,0),Vector(0,1,0))
+  s.translate(Vector(0,sign*275,0))
+  g=next(k for k,v in groups.items() if o in v.Group)
+  col=(.9,.47,.13) if o.Name in ['Tire','Hub'] else colors[g]
+  item(side+o.Name,side+' / '+o.Label,s,col,'模块尺寸暂定；轮面按图02，交界R25已表达')
+# Shared transverse members connect both modules to the side frame envelope.
+for xx in [-185,155]:
+ beam=Part.makeBox(30,744,40,Vector(xx,-372,175)).cut(Part.makeBox(24,746,34,Vector(xx+3,-373,178)))
+ for sign in [-1,1]:
+  for yy in [-53,-23]:beam=beam.cut(Part.makeCylinder(3.5,12,Vector(xx+15,sign*(275+yy),174)))
+ item('SharedBeam'+str(xx).replace('-','N'),'贯通横梁 — 截面/孔位暂定',beam,(.46,.53,.59),'连接模块法兰与侧框；截面及孔位待实测')
+# Chassis shell and floor; shell height300 provisionally from side lower edge20.
+floor=Part.makeBox(1394,744,5,Vector(-697,-372,50))
+for sign in [-1,1]:floor=floor.cut(Part.makeBox(310,270,9,Vector(-155,100 if sign>0 else -370,48)))
+for xx in [-450,450]:
+ for sign in [-1,1]:floor=floor.cut(Part.makeBox(200,100,9,Vector(xx-100,240 if sign>0 else -340,48)))
+item('InnerFloor','内底板 — 开口暂定',floor,(.63,.70,.73),'板厚5与开口暂定；下表面轨顶上50')
+for sign in [-1,1]:
+ shell=Part.makeBox(1400,3,300,Vector(-700,372 if sign>0 else -375,20))
+ for pivot in [-600,600]:shell=shell.cut(Part.makeBox(140,5,40,Vector(pivot-80,371 if sign>0 else -376,19)))
+ item('SideShell'+str(sign).replace('-','N'),'侧板 — 300高度基准暂定',shell,(.25,.44,.51),'外形长宽据初稿；高300暂从侧板下缘计，非确认')
+for x in [-700,697]:item('End'+str(x).replace('-','N'),'端板包络',Part.makeBox(3,744,300,Vector(x,-372,20)),(.25,.44,.51),'厚度/高度基准暂定')
+# Drawing02 R25 begins2mm outboard of the track contact line.
+def track_shape(x,y,sign):
+ s=revolved_profile([(0,-27,70),(70,-27,70),(70,2,70),(95,27,70),(95,62,70),(0,62,70),(0,-27,70)],(2,(95-25/math.sqrt(2),2+25/math.sqrt(2),70)))
+ if sign<0:s=s.mirror(Vector(0,0,0),Vector(0,1,0))
+ s.translate(Vector(x,y,0));return s
+# Track wheel source axle and bearing interfaces remain simplified.
+
+for x in [-450,450]:
+ for sign in [-1,1]:
+  a=Vector(0,sign,0);y=sign*275
+  item('Track'+str(x).replace('-','N')+str(sign).replace('-','N'),'轨道轮 Ø140×54 / 裙边Ø190×35',track_shape(x,y,sign),(.30,.61,.79),'图02尺寸；R25起点外偏2，轴向分段按当前图义解释')
+# Caster axle at -14, tire bottom -54; pivot at +/-600 with20mm trail.
+for pivot in [-600,600]:
+ for sign in [-1,1]:
+  y=sign*365;x=pivot-20;tag=str(pivot).replace('-','N')+str(sign).replace('-','N')
+  item('Caster'+tag,'万向轮 Ø80×20',Part.makeCylinder(40,20,Vector(x,y-10,-14),Vector(0,1,0)),(.29,.67,.56),'图02轮尺寸及高度')
+  item('CasterMount'+tag,'万向轮安装座占位',Part.makeBox(36,28,6,Vector(pivot-18,y-14,44)),(.4,.48,.51),'孔位及固定待确认；安装面50')
+  # Fork side plates end at axle; simplified clear tire.
+  for dy in [-14,11]:
+   poly=Part.makePolygon([Vector(pivot-10,y+dy,44),Vector(pivot+10,y+dy,44),Vector(x+8,y+dy,-14),Vector(x-8,y+dy,-14),Vector(pivot-10,y+dy,44)])
+   item('Fork'+tag+str(dy).replace('-','N'),'万向轮叉架占位',Part.Face(poly).extrude(Vector(0,3,0)),(.80,.64,.32),'叉架简化，未校验360度回转')
+for sign in [-1,1]:item('Rail'+str(sign).replace('-','N'),'圆钢管轨道 Ø50 / 中心距550',Part.makeCylinder(25,1800,Vector(-900,sign*275,-25),Vector(1,0,0)),(.55,.59,.63),'图01标注')
+context.recompute();context.saveAs(OUT+'/ChassisAssembly_R03.FCStd');Part.export(allparts,OUT+'/ChassisAssembly_R03.step')
+# Partial checks: shape topology and module sampled motion, excluding intentional fits.
+checks=[{'name':o.Name,'valid':o.Shape.isValid(),'solids':len(o.Shape.Solids)} for o in allparts]
+assert all(o['valid'] for o in checks)
+# Pairwise moving-vs-fixed module intersections at finite displacements.
+fixed=[o for o in visible if o.Name not in moving and o not in groups['Springs'].Group and o.Name!='CableLoop']
+samples=[]
+for dz in [-4,0,4]:
+ hits=[]
+ for name in moving:
+  s=doc.getObject(name).Shape.copy();s.translate(Vector(0,0,dz))
+  for f in fixed:
+   if s.BoundBox.intersect(f.Shape.BoundBox):
+    v=s.common(f.Shape).Volume
+    if v>.05:hits.append({'moving':name,'fixed':f.Name,'mm3':round(v,2)})
+ samples.append({'displacement_mm':dz,'overlaps':hits})
+json.dump({'assembly_checks':checks,'motion_samples':samples,'note':'仅模块移动对固定件离散检查；弹簧变形、轨道接触、整车干涉和承载未完成'},open(OUT+'/geometry_check.json','w'),ensure_ascii=False,indent=2)
+# Reopen both native documents.
+for d,path in [(doc,'DriveModule_R03.FCStd'),(context,'ChassisAssembly_R03.FCStd')]:
+ App.closeDocument(d.Name);opened=App.openDocument(OUT+'/'+path);opened.recompute()
+ assert all(o.Shape.isValid() for o in opened.Objects if o.TypeId=='Part::Feature')
+print('R03_REOPEN_PASS',len(checks),'samples',[(r['displacement_mm'],len(r['overlaps'])) for r in samples])

@@ -1,0 +1,17 @@
+[
+  {
+    "mm": -4,
+    "wheel_center_z": 66.0,
+    "spring_top_z": 149.98831966063062
+  },
+  {
+    "mm": 0,
+    "wheel_center_z": 70.0,
+    "spring_top_z": 149.99799570252856
+  },
+  {
+    "mm": 4,
+    "wheel_center_z": 74.0,
+    "spring_top_z": 149.9996227697653
+  }
+]

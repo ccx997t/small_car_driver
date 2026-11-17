@@ -1,0 +1,34 @@
+import FreeCAD as App, FreeCADGui as Gui, Part
+from FreeCAD import Vector
+from PySide import QtCore,QtWidgets
+path='/home/yanght/codex_pro/small_car_driver/models/round-03/DriveModule_R03.FCStd'
+d=App.getDocument('DriveModule_R03') if 'DriveModule_R03' in App.listDocuments() else App.openDocument(path)
+App.setActiveDocument(d.Name)
+# Standalone module only. No body or track moves; this is a geometric review.
+parts=[]
+for key in ['Moving','Existing','Drive']:
+ parts+=list(d.getObject(key).Group)
+base={o.Name:App.Placement(o.Placement) for o in parts}
+original_springs={o.Name:o.Shape.copy() for o in d.getObject('Springs').Group}
+def update(z):
+ for o in parts:
+  p=App.Placement(base[o.Name]);p.Base.z+=z;o.Placement=p
+ for side,x in [('L',-115),('R',115)]:
+  h=48-z;helix=Part.makeHelix(h/6,h,16)
+  profile=Part.Wire([Part.makeCircle(2,Vector(16,0,0),Vector(0,1,0))])
+  shape=Part.Wire(helix.Edges).makePipeShell([profile],True,True)
+  shape.translate(Vector(x,-32,100+z));d.getObject('Spring'+side).Shape=shape
+ d.recompute();label.setText('示意位移 %s mm（非额定行程）'%z)
+def close_event(event):
+ update(0)
+ for name,s in original_springs.items():d.getObject(name).Shape=s
+ d.recompute();event.accept()
+window=QtWidgets.QDialog(Gui.getMainWindow());window.setWindowTitle('R03 驱动模块升降检查')
+layout=QtWidgets.QVBoxLayout(window);label=QtWidgets.QLabel('示意位移 0 mm（非额定行程）');layout.addWidget(label)
+slider=QtWidgets.QSlider(QtCore.Qt.Horizontal);slider.setRange(-4,4);slider.setValue(0);slider.setTracking(False);layout.addWidget(slider)
+layout.addWidget(QtWidgets.QLabel('仅几何演示；不代表轮轨接触、弹簧力或承载验证。关闭恢复中位。'))
+slider.valueChanged.connect(update);window.closeEvent=close_event
+Gui.activeDocument().activeView().viewAxonometric();Gui.activeDocument().activeView().fitAll()
+window.show()
+# Keep references alive for the nonmodal dialog.
+Gui._car_r03_motion=(window,slider,update)

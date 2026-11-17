@@ -1,0 +1,12 @@
+import FreeCAD as App
+import FreeCADGui as Gui
+p='/home/yanght/codex_pro/small_car_driver/models/round-03/ChassisAssembly_R03.FCStd'
+d=App.getDocument('ChassisAssembly_R03') if 'ChassisAssembly_R03' in App.listDocuments() else App.openDocument(p)
+App.setActiveDocument(d.Name)
+for name in ['RailN1','Rail1']:
+ o=d.getObject(name)
+ if o:o.ViewObject.Visibility=False
+d.recompute()
+Gui.activeDocument().activeView().viewAxonometric()
+Gui.activeDocument().activeView().fitAll()
+d.save()

@@ -1,0 +1,14 @@
+import FreeCAD as App, Part, json
+from pathlib import Path
+p=Path('/home/yanght/codex_pro/small_car_driver/models/round-03')
+d=App.openDocument(str(p/'ChassisAssembly_R03.FCStd'));d.recompute()
+parts=[o for o in d.Objects if o.TypeId=='Part::Feature']
+hits=[]
+for i,a in enumerate(parts):
+ for b in parts[i+1:]:
+  if a.Shape.BoundBox.intersect(b.Shape.BoundBox):
+   v=a.Shape.common(b.Shape).Volume
+   if v>.05:hits.append({'a':a.Name,'b':b.Name,'volume_mm3':round(v,3)})
+json.dump({'pairs':len(parts)*(len(parts)-1)//2,'overlaps':hits,'note':'静态检查；未自动将装配接触、夹持、轮轨接触认定为合格'},open(p/'assembly_overlap_check.json','w'),ensure_ascii=False,indent=2)
+m=App.openDocument(str(p/'DriveModule_R03.FCStd'));Part.export([o for o in m.Objects if o.TypeId in ['Part::Feature','Part::Box','Part::Cylinder']],str(p/'DriveModule_R03.step'))
+print('ASSEMBLY_AUDIT',len(hits))

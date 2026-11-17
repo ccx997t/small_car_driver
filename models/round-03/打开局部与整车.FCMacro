@@ -1,0 +1,25 @@
+import FreeCAD as App
+import FreeCADGui as Gui
+from pathlib import Path
+root=Path('/home/yanght/codex_pro/small_car_driver/models/round-03')
+Gui.activateWorkbench('PartWorkbench')
+colors={'Frame':(.46,.53,.59),'Fixed':(.32,.53,.68),'Moving':(.36,.68,.62),'Existing':(.20,.23,.26),'Drive':(.28,.30,.32),'Guides':(.72,.75,.78),'Springs':(.92,.72,.22),'Hardware':(.62,.65,.69)}
+for name in ['ChassisAssembly_R03','DriveModule_R03']:
+ d=App.getDocument(name) if name in App.listDocuments() else App.openDocument(str(root/(name+'.FCStd')))
+ App.setActiveDocument(name)
+ if name=='DriveModule_R03':
+  for key,color in colors.items():
+   group=d.getObject(key)
+   if group:
+    group.ViewObject.Visibility=True
+    for o in group.Group:
+     o.ViewObject.Visibility=True;o.ViewObject.ShapeColor=color
+  for key in ['Tire','Hub']:d.getObject(key).ViewObject.ShapeColor=(.90,.47,.13)
+ else:
+  for o in d.Objects:
+   if o.Name in ['RailN1','Rail1'] or o.Name.startswith(('Caster','Fork')):o.ViewObject.Visibility=False
+ d.recompute()
+ Gui.activeDocument().activeView().viewAxonometric()
+ Gui.activeDocument().activeView().fitAll()
+App.setActiveDocument('DriveModule_R03')
+Gui.activeDocument().activeView().fitAll()
